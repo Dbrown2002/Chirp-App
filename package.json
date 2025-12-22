@@ -1,0 +1,25 @@
+{
+  "name": "chirp-chat-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+   "start": "npm run build && npm run start --prefix backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dbrown2002/Chirp-Chat-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Dbrown2002/Chirp-Chat-App/issues"
+  },
+  "homepage": "https://github.com/Dbrown2002/Chirp-Chat-App#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
