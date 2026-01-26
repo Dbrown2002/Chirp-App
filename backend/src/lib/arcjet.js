@@ -26,7 +26,9 @@ const aj = arcjet({
       //characteristics: ["ip.src"],
       max: 50, // Refill 5 tokens per interval
       interval: 60, // Refill every 10 seconds
-      
+
     }),
   ],
 });
+
+export default aj;
