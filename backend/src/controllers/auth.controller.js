@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import { generateToken } from "../lib/utils.js";
 import { sendWelcomeEmail } from "../emails/emailHandlers.js";
+import cloudinary from "../lib/cloudinary.js";
 
 
     
@@ -119,4 +120,33 @@ export const checkAuth = async (req, res) => {
         console.error("Error in checkAuth controller:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
+};
+
+export const updateProfile = async (req, res) =>  {
+
+    try {
+    const {profilePicture } = req.body;
+
+    if (!profilePicture) {
+        return res.status(400).json({ message: "Profile picture URL is required." });
+
+    }
+
+    const userId = req.user._id;
+    
+    const uploadResponse = await cloudinary.uploader.upload(profilePicture)
+    const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { profilePicture:uploadResponse.secure_url },
+        { new: true }
+    ).select('-password');
+
+    res.status(200).json(updatedUser);
+
+    } catch (error) {
+        console.error("Error updating profile picture:", error);
+        res.status(500).json({ message: "Server error. Please try again later." });
+    }
+
+
 };
