@@ -6,18 +6,17 @@ import { arcjetProtection } from "../middleware/arcjet.middleware.js";
 
 const router = express.Router();
 
-router.use(arcjetProtection);
+// Check endpoint doesn't need arcjet protection - it's called frequently
+router.get("/check", protectRoute, (req, res) => {
+    res.status(200).json(req.user);
+});
 
-router.post("/signup", signup);
-router.post("/login", login);
+// Apply arcjet protection to sensitive routes
+router.post("/signup", arcjetProtection, signup);
+router.post("/login", arcjetProtection, login);
 router.post("/logout", logout);
 
 router.put("/update-profile", protectRoute, updateProfile);
 
-router.get("/check-auth", protectRoute, (req, res) => {
-    res.status(200).json(req.user);
-});
-
 
 export default router;
-
