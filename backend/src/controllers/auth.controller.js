@@ -122,31 +122,24 @@ export const checkAuth = async (req, res) => {
     }
 };
 
-export const updateProfile = async (req, res) =>  {
-
-    try {
-    const {profilePicture } = req.body;
-
-    if (!profilePicture) {
-        return res.status(400).json({ message: "Profile picture URL is required." });
-
-    }
+export const updateProfile = async (req, res) => {
+  try {
+    const { profilePicture } = req.body;
+    if (!profilePicture) return res.status(400).json({ message: "Profile picture is required" });
 
     const userId = req.user._id;
-    
-    const uploadResponse = await cloudinary.uploader.upload(profilePicture)
+
+    const uploadResponse = await cloudinary.uploader.upload(profilePicture);
+
     const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { profilePicture:uploadResponse.secure_url },
-        { new: true }
+      userId,
+      { profilePicture: uploadResponse.secure_url },
+      { new: true }
     ).select('-password');
 
     res.status(200).json(updatedUser);
-
-    } catch (error) {
-        console.error("Error updating profile picture:", error);
-        res.status(500).json({ message: "Server error. Please try again later." });
-    }
-
-
+  } catch (error) {
+    console.log("Error in update profile:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import axios from 'axios';
+import { axiosInstance } from '../lib/axios.js';
+import toast from 'react-hot-toast';
 
  const useChatStore = create((set) => ({ 
 
@@ -8,7 +9,7 @@ import axios from 'axios';
     messages: [],
     activeTab: 'chats', // 'chats' or 'contacts'
     SelectedUser: null,
-    isUserLoading: false,
+    isUsersLoading: false,
     isMessagesLoading: false,
     isSoundEnabled: localStorage.getItem('isSoundEnabled') === 'true' ? true : false,
 
@@ -23,31 +24,28 @@ import axios from 'axios';
 
 
     getAllContacts: async () => {
-        set({ isUserLoading: true });
+        set({ isUsersLoading: true });
 
         try {
-            const res = await axios.get('/messages/contactss');
-            set({ allContacts: res.data, isUserLoading: false });
+            const res = await axiosInstance.get('/messages/contacts');
+            set({ allContacts: res.data });
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to load contacts. Please try again.");
-}      finally {         
-        set({ isUserLoading: false });
-    }
-
+        } finally {         
+            set({ isUsersLoading: false });
+        }
     },
 
     getMyChatPartners: async () => {
-        set ({ isUserLoading: true });
+        set({ isUsersLoading: true });
         try {
             const res = await axiosInstance.get("/messages/chats");
-            set ({ allContacts: res.data });
-
+            set({ chats: res.data });
         } catch (error) {
-            toast.error(error.response?.data?.message || "Failed to load chat partners. Please try again.");
+            toast.error(error.response?.data?.message || "Failed to load chats. Please try again.");
         } finally {
-            set ({ isUserLoading: false });
+            set({ isUsersLoading: false });
         }
-
     },
 
 
